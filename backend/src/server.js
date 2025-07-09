@@ -7,13 +7,15 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-connectDB();
+
 app.use(express.json()); // Middleware to parse JSON bodies
 //call the ratelimiter middleware
 app.use(ratelimiter);
 
 app.use('/api/notes', noteRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server is running on PORT: ${PORT}`);
+  });
 });
