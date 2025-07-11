@@ -11,14 +11,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(express.json()); // Middleware to parse JSON bodies
-//call the ratelimiter middleware
-app.use(ratelimiter);
 app.use(
   cors({
     origin: 'http://localhost:5173', // Change this to your frontend URL in production
   })
 ); // Enable CORS for all routes
+app.use(express.json()); // Middleware to parse JSON bodies
+//call the ratelimiter middleware
+app.use(ratelimiter);
 app.use('/api/notes', noteRoutes);
 
 connectDB().then(() => {
