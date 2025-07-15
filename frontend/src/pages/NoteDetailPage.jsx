@@ -35,6 +35,37 @@ const NoteDetailPage = () => {
       </div>
     );
   }
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this note?')) return;
+
+    try {
+      await api.delete(`/notes/${note._id}`);
+      toast.success('Note deleted successfully');
+      navigate('/');
+    } catch (error) {
+      toast.error('Failed to delete note');
+    }
+  };
+
+  const handleSave = async () => {
+    if (!note.title.trim() || !note.content.trim()) {
+      toast.error('Please add a title or content');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await api.put(`/notes/${note._id}`, note);
+      toast.success('Note updated successfully');
+      navigate('/');
+    } catch (error) {
+      toast.error('Failed to update note');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
@@ -44,7 +75,10 @@ const NoteDetailPage = () => {
               <ArrowLeftIcon className="h-5 w-5" />
               Back to Notes
             </Link>
-            <button className="btn btn-error btn-outline">
+            <button
+              onClick={handleDelete}
+              className="btn btn-error btn-outline"
+            >
               <Trash2Icon className="h-5 w-5" />
               Delete Note
             </button>
@@ -60,6 +94,8 @@ const NoteDetailPage = () => {
                   type="text"
                   placeholder="Note title"
                   className="input input-bordered"
+                  value={note?.title || ''}
+                  onChange={(e) => setNote({ ...note, title: e.target.value })} // Update title in state
                 />
               </div>
 
@@ -70,11 +106,21 @@ const NoteDetailPage = () => {
                 <textarea
                   placeholder="Write your note here..."
                   className="textarea textarea-bordered h-32"
+                  value={note?.content || ''}
+                  onChange={(e) =>
+                    setNote({ ...note, content: e.target.value })
+                  } // Update content in state
                 />
               </div>
 
               <div className="card-actions justify-end">
-                <button className="btn btn-primary">Save Changes</button>
+                <button
+                  className="btn btn-primary"
+                  disabled={saving}
+                  onClick={handleSave}
+                >
+                  {saving ? 'Saving...' : 'Save Changes'}
+                </button>
               </div>
             </div>
           </div>
