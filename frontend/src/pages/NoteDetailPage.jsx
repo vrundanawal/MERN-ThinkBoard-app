@@ -12,6 +12,21 @@ const NoteDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Extracting the note ID from the URL parameters
 
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        const response = await api.get(`/notes/${id}`);
+        setNote(response.data);
+      } catch (error) {
+        toast.error('Failed to load note');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNote();
+  }, [id]);
+  console.log('note', note);
   return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
