@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '../components/Navbar';
 import RateLimitedUI from '../components/RateLimitedUI';
 import toast from 'react-hot-toast';
@@ -11,10 +11,15 @@ const HomePage = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const hasFetched = useRef(false); // Track if fetch has already occurred
+
   useEffect(() => {
     const fetchNotes = async () => {
+      if (hasFetched.current) return; // Prevent duplicate calls
+      hasFetched.current = true;
       try {
         const response = await api.get('/notes');
+        console.log('Fetched notes:', response.data); // Debugging line to check fetched notes
         setNotes(response.data);
         setIsRateLimited(false);
       } catch (error) {
