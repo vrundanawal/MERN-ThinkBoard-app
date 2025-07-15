@@ -27,6 +27,14 @@ const NoteDetailPage = () => {
     fetchNote();
   }, [id]);
   console.log('note', note);
+  //loading state is used to show a loading spinner while the note is being fetched
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <LoaderIcon className="animate-spin size-10" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
