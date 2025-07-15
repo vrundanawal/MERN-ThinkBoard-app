@@ -31,6 +31,8 @@ const CreatePage = () => {
                     type="text"
                     placeholder="Note Title"
                     className="input input-bordered"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                 </div>
 
@@ -41,11 +43,19 @@ const CreatePage = () => {
                   <textarea
                     placeholder="Write your note here..."
                     className="textarea textarea-bordered h-32"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
                   />
                 </div>
 
                 <div className="card-actions justify-end">
-                  <button type="submit" className="btn btn-primary"></button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                  >
+                    {loading ? 'Creating...' : 'Create Note'}
+                  </button>
                 </div>
               </form>
             </div>
