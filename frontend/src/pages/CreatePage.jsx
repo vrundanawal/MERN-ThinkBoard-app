@@ -28,14 +28,19 @@ const CreatePage = () => {
       if (response.status === 201) {
         toast.success('Note created successfully');
         navigate('/');
-      } else {
-        toast.error('Failed to create note. Please try again later.');
       }
     } catch (error) {
       setLoading(false);
       console.error('Error creating note:', error);
-      toast.error('Failed to create note. Please try again later.');
-      return;
+      // Check if the error is due to rate limiting
+      if (error.response && error.response.status === 429) {
+        toast.error("Slow Down! You're creating notes too fast", {
+          duration: 5000,
+          icon: '💀',
+        });
+      } else {
+        toast.error('An unexpected error occurred. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }
