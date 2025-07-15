@@ -2,13 +2,44 @@ import { ArrowLeftIcon } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router';
+import axios from 'axios';
 
 const CreatePage = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {};
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    //add validation
+    if (!title.trim() || !content.trim()) {
+      toast.error('All fields are required');
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:5001/api/notes', {
+        title,
+        content,
+      });
+
+      if (response.status === 201) {
+        toast.success('Note created successfully');
+        navigate('/');
+      } else {
+        toast.error('Failed to create note. Please try again later.');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error creating note:', error);
+      toast.error('Failed to create note. Please try again later.');
+      return;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-base-200">
