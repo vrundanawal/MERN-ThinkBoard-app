@@ -58,6 +58,8 @@ const NoteDetailPage = () => {
     try {
       await api.put(`/notes/${note._id}`, note);
       toast.success('Note updated successfully');
+      // Reset the note state to empty or initial value
+      setNote({ title: '', content: '' });
       navigate('/');
     } catch (error) {
       toast.error('Failed to update note');
