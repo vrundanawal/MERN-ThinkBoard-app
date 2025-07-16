@@ -25,8 +25,15 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use(ratelimiter);
 app.use('/api/notes', noteRoutes);
 
-// Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+//only in production
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React frontend app
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  });
+}
 
 connectDB().then(() => {
   app.listen(PORT, () => {
