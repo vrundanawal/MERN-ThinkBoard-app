@@ -6,7 +6,6 @@ import path from 'path';
 import noteRoutes from './routes/notesRoutes.js';
 import { connectDB } from './config/db.js';
 import ratelimiter from './middleware/rateLimter.js';
-import { log } from 'console';
 
 dotenv.config();
 
@@ -15,11 +14,18 @@ const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 console.log(__dirname);
 
-app.use(
-  cors({
-    origin: 'http://localhost:5173', // Change this to your frontend URL in production
-  })
-); // Enable CORS for all routes
+// Middleware setup
+// Enable CORS only in development mode
+// This allows the frontend to make requests to the backend without CORS issues
+//In production domain is same so no need to enable CORS
+if (process.env.NODE_ENV !== 'production') {
+  app.use(
+    cors({
+      origin: 'http://localhost:5173', // Change this to your frontend URL in production
+    })
+  ); // Enable CORS for all routes
+}
+
 app.use(express.json()); // Middleware to parse JSON bodies
 //call the ratelimiter middleware
 app.use(ratelimiter);
