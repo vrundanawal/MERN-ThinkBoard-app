@@ -1,0 +1,13 @@
+{
+  "name": "mern-thinkboard",
+  "version": "1.0.0",
+  "description": "NODE_ENV=development\r 🔧 Run the Backend\r cd backend\r npm install\r npm run dev\r 💻 Run the Frontend\r cd frontend\r npm install\r npm run dev",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

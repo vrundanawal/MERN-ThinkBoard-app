@@ -1,15 +1,19 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 
 import noteRoutes from './routes/notesRoutes.js';
 import { connectDB } from './config/db.js';
 import ratelimiter from './middleware/rateLimter.js';
+import { log } from 'console';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
+console.log(__dirname);
 
 app.use(
   cors({
@@ -20,6 +24,9 @@ app.use(express.json()); // Middleware to parse JSON bodies
 //call the ratelimiter middleware
 app.use(ratelimiter);
 app.use('/api/notes', noteRoutes);
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 connectDB().then(() => {
   app.listen(PORT, () => {
